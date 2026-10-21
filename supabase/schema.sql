@@ -154,7 +154,7 @@ drop policy if exists members_read_participants on public.conversation_members;
 create policy members_read_participants on public.conversation_members for select to authenticated using(user_id=(select auth.uid()) or public.is_conversation_member(conversation_id));
 drop policy if exists members_add_creator_or_self on public.conversation_members;
 create policy members_add_creator_or_self on public.conversation_members for insert to authenticated with check(
- user_id=(select auth.uid()) or exists(select 1 from public.conversations c where c.id=conversation_id and c.created_by=(select auth.uid()))
+ exists(select 1 from public.conversations c where c.id=conversation_id and c.created_by=(select auth.uid()))
 );
 drop policy if exists members_update_own_read_at on public.conversation_members;
 create policy members_update_own_read_at on public.conversation_members for update to authenticated using(user_id=(select auth.uid())) with check(user_id=(select auth.uid()));
